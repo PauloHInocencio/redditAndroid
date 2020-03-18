@@ -1,7 +1,6 @@
 package com.fastnews.ui.detail
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -163,20 +162,24 @@ class DetailFragment : Fragment() {
         val PREFIX_HTTP = "http"
         var thumbnailUrl = ""
 
-        // TODO Fix high quality images
-        /*if(post?.preview != null) {
+        if(post?.preview != null) {
             post?.preview?.images?.map {
-                if (!TextUtils.isEmpty(it.source.url)) {
-                    thumbnailUrl = it.source.url
+                if (it.source.url.isNotEmpty()){
+                    thumbnailUrl = it.source.url.replace("&amp;", "&")
+                    return@map
                 }
             }
-        }*/
-
-        if (!TextUtils.isEmpty(post?.thumbnail) && post?.thumbnail!!.startsWith(PREFIX_HTTP)) {
-            thumbnailUrl = post!!.thumbnail
         }
 
-        if (!TextUtils.isEmpty(thumbnailUrl)) {
+        if (thumbnailUrl.isEmpty()){
+            post?.thumbnail?.let {
+                if (it.startsWith(PREFIX_HTTP)){
+                    thumbnailUrl = it
+                }
+            }
+        }
+
+        if (thumbnailUrl.isNotEmpty()){
             Glide.with(item_detail_post_thumbnail.context)
                 .load(thumbnailUrl)
                 .placeholder(R.drawable.ic_placeholder)
