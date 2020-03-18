@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fastnews.R
@@ -28,7 +29,7 @@ class TimelineFragment : Fragment() {
         ViewModelProviders.of(this).get(PostViewModel::class.java)
     }
 
-    private lateinit var adapter: TimelineAdapter
+    private lateinit var adapter: TimelinePageAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +44,10 @@ class TimelineFragment : Fragment() {
 
         buildActionBar()
         buildTimeline()
+    }
+
+    override fun onStart() {
+        super.onStart()
         verifyConnectionState()
     }
 
@@ -71,24 +76,23 @@ class TimelineFragment : Fragment() {
     }
 
     private fun buildTimeline() {
-        adapter = TimelineAdapter { it, imageView ->
+
+        adapter = TimelinePageAdapter { it, imageView ->
             onClickItem(it, imageView)
         }
-
         timeline_rv.layoutManager = LinearLayoutManager(context)
         timeline_rv.itemAnimator = DefaultItemAnimator()
         timeline_rv.adapter = adapter
     }
 
     private fun fetchTimeline() {
-        viewModel.getPosts("", 50).observe(this, Observer<List<PostData>> { posts ->
-            posts.let {
-                adapter.setData(posts)
-                hideProgress()
-                showPosts()
-            }
+        viewModel.getPosts().observe(this, Observer {
+            adapter.submitList(it)
+            hideProgress()
+            showPosts()
         })
     }
+
 
     private fun showPosts() {
         timeline_rv.visibility = View.VISIBLE
@@ -110,11 +114,11 @@ class TimelineFragment : Fragment() {
         state_without_conn_timeline.visibility = View.GONE
     }
 
-    private fun onClickItem(postData: PostData, imageView: ImageView) {
+    private fun onClickItem(postData: PostData?, imageView: ImageView) {
         val extras = FragmentNavigatorExtras(
             imageView to "thumbnail"
         )
-        var bundle = Bundle()
+        val bundle = Bundle()
         bundle.putParcelable(KEY_POST, postData)
         findNavController().navigate(R.id.action_timeline_to_detail, bundle, null, extras)
     }

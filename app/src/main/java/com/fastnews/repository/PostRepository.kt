@@ -1,21 +1,15 @@
 package com.fastnews.repository
 
-import com.fastnews.service.api.RedditAPI
-import com.fastnews.service.model.PostData
+import com.fastnews.service.api.RedditService
+import com.fastnews.service.model.PostResponse
 
 object PostRepository : BaseRepository() {
 
-    suspend fun getPosts(after: String, limit: Int): List<PostData> {
+    private val api = RedditService.createApi()
 
-        val postResponse = safeApiCall(
-            call = { RedditAPI.redditService.getPostList(after, limit).await() },
+    suspend fun getPosts(after: String?= null, before:String? = null, limit: Int): PostResponse? =
+        safeApiCall(
+            call = { api.getPostList(after = after, before = before, limit = limit).await() },
             errorMessage = "Error to fetching posts"
         )
-
-        val result: MutableList<PostData> = mutableListOf()
-        postResponse?.data?.children?.map { postChildren -> result.add(postChildren.data) }
-
-        return result
-
-    }
 }

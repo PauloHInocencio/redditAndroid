@@ -117,6 +117,7 @@ dependencies {
     //Okhttp3
     implementation "com.squareup.okhttp3:okhttp:3.14.2"
     implementation "com.squareup.okhttp3:logging-interceptor:4.4.0"
+    implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel:$rootProject.archLifecycleVersion"
@@ -142,6 +143,9 @@ dependencies {
     // Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
     implementation 'com.google.android.material:material:1.0.0'
+
+    // Paging
+    implementation "android.arch.paging:runtime:$rootProject.pagingVersion"
 
     // Custom tabs
     implementation 'com.android.support:customtabs:28.0.0'

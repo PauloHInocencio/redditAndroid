@@ -36,4 +36,5 @@ ext {
     retrofitVersion = '2.5.0'
     archLifecycleVersion = '2.2.0-alpha04'
     coroutinesVersion = '1.2.0'
+    pagingVersion = '1.0.1'
 }

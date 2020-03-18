@@ -1,16 +1,18 @@
 package com.fastnews.repository
 
-import com.fastnews.service.api.RedditAPI
+import com.fastnews.service.api.RedditService
 import com.fastnews.service.model.CommentData
 
 object CommentRepository : BaseRepository() {
 
     const val PREFIX_COMMENT = "t1"
 
+    private val api = RedditService.createApi()
+
     suspend fun getComments(postId: String): List<CommentData> {
 
         val commentsResponse = safeApiCall(
-            call = { RedditAPI.redditService.getCommentList(postId).await() },
+            call = { api.getCommentList(postId).await() },
             errorMessage = "Error to fetch comments from postId -> $postId"
         )
 

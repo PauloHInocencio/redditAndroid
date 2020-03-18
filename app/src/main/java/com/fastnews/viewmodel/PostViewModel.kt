@@ -4,27 +4,31 @@ import android.app.Application
 import androidx.annotation.UiThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.fastnews.mechanism.Coroutines
-import com.fastnews.repository.PostRepository
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.fastnews.service.model.PostData
+import com.fastnews.source.PostDataSource
+
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
 
-    private lateinit var posts: MutableLiveData<List<PostData>>
-
     @UiThread
-    fun getPosts(after: String, limit: Int): LiveData<List<PostData>> {
-            if (!::posts.isInitialized) {
-                posts = MutableLiveData()
+     fun getPosts(limit: Int = 50) : LiveData<PagedList<PostData>> {
 
-                Coroutines.ioThenMain({
-                    PostRepository.getPosts(after, limit)
-                }) {
-                    posts.postValue(it)
-                }
+        val config = PagedList.Config.Builder()
+            .setPageSize(limit)
+            .setEnablePlaceholders(true)
+            .build()
+
+        val dataSourceFactory = object : DataSource.Factory<String, PostData>() {
+            override fun create(): DataSource<String, PostData> {
+                return PostDataSource()
             }
-        return posts
+        }
+
+        return LivePagedListBuilder<String, PostData>(dataSourceFactory, config).build()
+
     }
 
 }
