@@ -1,4 +1,4 @@
-package com.fastnews.data.local
+package com.fastnews.data.database
 
 import android.content.Context
 import androidx.room.Database
@@ -6,17 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.fastnews.data.model.PostData
-import com.fastnews.data.model.Preview
-import com.fastnews.data.model.PreviewImage
-import com.fastnews.data.model.PreviewImageSource
 
 @Database(entities = [PostData::class ], version = 1)
 @TypeConverters(PreviewImagesTypeConverters::class)
-abstract class RedditDatabase : RoomDatabase() {
+abstract class NewsDatabase : RoomDatabase() {
 
     companion object {
-        fun createDB(context: Context): RedditDatabase {
-            val dbBuilder = Room.databaseBuilder(context, RedditDatabase::class.java, "reddit.db")
+        fun createDB(context: Context): NewsDatabase {
+            val dbBuilder = Room.databaseBuilder(context, NewsDatabase::class.java, "reddit.db")
             return dbBuilder.build()
         }
     }

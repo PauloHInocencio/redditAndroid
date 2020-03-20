@@ -38,4 +38,5 @@ ext {
     coroutinesVersion = '1.2.0'
     pagingVersion = '1.0.1'
     roomVersion = '2.2.5'
+    koinVersion = '2.1.4'
 }

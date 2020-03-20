@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedList
@@ -21,13 +19,12 @@ import com.fastnews.data.model.PostData
 import com.fastnews.ui.detail.DetailFragment.Companion.KEY_POST
 import com.fastnews.viewmodel.PostViewModel
 import kotlinx.android.synthetic.main.fragment_timeline.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TimelineFragment : Fragment() {
 
-    private val viewModel: PostViewModel by lazy {
-        ViewModelProviders.of(this).get(PostViewModel::class.java)
-    }
+    private val postViewModel: PostViewModel by viewModel()
 
     private var adapter: TimelinePageAdapter? = null
 
@@ -82,7 +79,7 @@ class TimelineFragment : Fragment() {
 
     private fun fetchTimeline() {
         showProgress()
-        viewModel.getPosts().observe(this, Observer {
+        postViewModel.getPosts().observe(viewLifecycleOwner, Observer {
             if (it.size != 0 ) {
                 adapter?.submitList(it)
                 hideProgress()
@@ -93,8 +90,8 @@ class TimelineFragment : Fragment() {
 
     private fun fetchTimelineOffline() {
         showProgress()
-        val liveData = viewModel.getPosts()
-        liveData.observe(this, object: Observer<PagedList<PostData>> {
+        val liveData = postViewModel.getPosts()
+        liveData.observe(viewLifecycleOwner, object: Observer<PagedList<PostData>> {
             override fun onChanged(list: PagedList<PostData>) {
                 hideProgress()
                 if (list.size != 0 ) {

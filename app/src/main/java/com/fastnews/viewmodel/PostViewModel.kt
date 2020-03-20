@@ -1,33 +1,35 @@
 package com.fastnews.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.annotation.UiThread
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.fastnews.data.local.RedditDatabase
+import com.fastnews.data.database.NewsDatabase
 import com.fastnews.data.model.PostData
-import com.fastnews.data.local.PostDataBoundaryCallback
+import com.fastnews.data.database.PostDataBoundaryCallback
+import com.fastnews.interactors.GetPosts
 
+class PostViewModel(
+    private val database: NewsDatabase,
+    private val getPosts: GetPosts
+    ) : ViewModel(){
 
-class PostViewModel(application: Application) : AndroidViewModel(application) {
+    private lateinit var liveData: LiveData<PagedList<PostData>>
 
+     @UiThread
      fun getPosts(limit: Int = 50) : LiveData<PagedList<PostData>> {
-         val config = PagedList.Config.Builder()
-            .setPageSize(limit)
-            .setEnablePlaceholders(true)
-            .build()
+         if(!::liveData.isInitialized) {
+             val config = PagedList.Config.Builder()
+                 .setPageSize(limit)
+                 .setEnablePlaceholders(true)
+                 .build()
+             val builder = LivePagedListBuilder<Int, PostData>(database.postDao().posts(), config)
+                 .setBoundaryCallback(PostDataBoundaryCallback(database, getPosts))
+            liveData = builder.build()
+         }
 
-         val database = RedditDatabase.createDB(this.getApplication())
-
-         val builder = LivePagedListBuilder<Int, PostData>(database.postDao().posts(), config)
-             .setBoundaryCallback(
-                 PostDataBoundaryCallback(
-                     database
-                 )
-             )
-
-        return builder.build()
+        return liveData
     }
 
 }

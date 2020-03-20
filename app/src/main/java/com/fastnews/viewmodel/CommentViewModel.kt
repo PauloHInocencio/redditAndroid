@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fastnews.mechanism.Coroutines
-import com.fastnews.repository.CommentRepository
 import com.fastnews.data.model.CommentData
+import com.fastnews.interactors.GetPostsComments
 
-class CommentViewModel : ViewModel() {
+class CommentViewModel(private val getComments:GetPostsComments): ViewModel() {
 
     private lateinit var comments: MutableLiveData<List<CommentData>>
 
@@ -16,9 +16,8 @@ class CommentViewModel : ViewModel() {
     fun getComments(postId: String): LiveData<List<CommentData>> {
         if(!::comments.isInitialized) {
             comments = MutableLiveData()
-
             Coroutines.ioThenMain({
-                CommentRepository.getComments(postId)
+                getComments.comments(postId)
             }) {
                 comments.postValue(it)
             }

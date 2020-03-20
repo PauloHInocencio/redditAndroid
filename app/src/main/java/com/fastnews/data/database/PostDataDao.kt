@@ -1,4 +1,4 @@
-package com.fastnews.data.local
+package com.fastnews.data.database
 
 import androidx.paging.DataSource
 import androidx.room.Dao

@@ -1,4 +1,4 @@
-package com.fastnews.data.remote
+package com.fastnews.data.service
 
 import java.lang.Exception
 
