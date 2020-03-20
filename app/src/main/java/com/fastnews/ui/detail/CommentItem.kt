@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.fastnews.R
 import com.fastnews.mechanism.TimeElapsed
-import com.fastnews.service.model.CommentData
+import com.fastnews.data.model.CommentData
 import kotlinx.android.synthetic.main.item_detail_post_comment.view.*
 
 class CommentItem(val activity: Activity, private val postComment: CommentData) {

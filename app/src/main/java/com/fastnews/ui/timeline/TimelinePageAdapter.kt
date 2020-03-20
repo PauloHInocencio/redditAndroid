@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import com.fastnews.R
-import com.fastnews.service.model.PostData
+import com.fastnews.data.model.PostData
 import kotlinx.android.synthetic.main.include_item_timeline_thumbnail.view.*
 
 class TimelinePageAdapter(val onClickItem: (PostData?, ImageView) -> Unit) : PagedListAdapter<PostData, TimelineItemViewHolder>(TimelineItemDiffUtilCallback()) {

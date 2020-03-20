@@ -1,8 +1,8 @@
-package com.fastnews.service.api
+package com.fastnews.data.remote
 
 import com.fastnews.BuildConfig
-import com.fastnews.service.model.CommentResponse
-import com.fastnews.service.model.PostResponse
+import com.fastnews.data.model.CommentResponse
+import com.fastnews.data.model.PostResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient

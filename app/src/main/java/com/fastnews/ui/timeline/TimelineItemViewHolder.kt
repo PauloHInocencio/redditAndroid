@@ -7,7 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fastnews.mechanism.TimeElapsed
-import com.fastnews.service.model.PostData
+import com.fastnews.data.model.PostData
 import kotlinx.android.synthetic.main.include_item_timeline_ic_comments.view.*
 import kotlinx.android.synthetic.main.include_item_timeline_ic_score.view.*
 import kotlinx.android.synthetic.main.include_item_timeline_thumbnail.view.*
@@ -45,27 +45,27 @@ class TimelineItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     }
 
     private fun populateThumbnail(value: PostData?) {
-        value?.thumbnail.let {
-
+        value?.thumbnail.let { thumbnail ->
             val PREFIX_HTTP = "http"
 
-            if (!TextUtils.isEmpty(it) && it!!.startsWith(PREFIX_HTTP)) {
-                Glide.with(view.item_timeline_thumbnail.context)
-                    .load(it)
-                    .placeholder(ColorDrawable(Color.LTGRAY))
-                    .error(ColorDrawable(Color.DKGRAY))
-                    .into(view.item_timeline_thumbnail)
-                view.item_timeline_thumbnail.visibility = View.VISIBLE
-            } else {
-                view.item_timeline_thumbnail.visibility = View.GONE
+            thumbnail?.let {
+                if (it.startsWith(PREFIX_HTTP)) {
+                    Glide.with(view.item_timeline_thumbnail.context)
+                        .load(it)
+                        .placeholder(ColorDrawable(Color.LTGRAY))
+                        .error(ColorDrawable(Color.DKGRAY))
+                        .into(view.item_timeline_thumbnail)
+                }
             }
         }
     }
 
     private fun populateTime(value: PostData?) {
-        value?.created_utc.let {
-            val elapsed = TimeElapsed.getTimeElapsed(it!!)
-            view.item_timeline_timeleft.text = elapsed
+        value?.created_utc.let { number ->
+            number?.let {
+                val elapsed = TimeElapsed.getTimeElapsed(it)
+                view.item_timeline_timeleft.text = elapsed
+            }
         }
     }
 

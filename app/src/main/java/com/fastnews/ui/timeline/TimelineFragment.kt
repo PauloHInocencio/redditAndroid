@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -16,11 +17,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fastnews.R
 import com.fastnews.mechanism.VerifyNetworkInfo
-import com.fastnews.service.model.PostData
+import com.fastnews.data.model.PostData
 import com.fastnews.ui.detail.DetailFragment.Companion.KEY_POST
 import com.fastnews.viewmodel.PostViewModel
 import kotlinx.android.synthetic.main.fragment_timeline.*
-import kotlinx.android.synthetic.main.include_state_without_conn_timeline.*
 
 
 class TimelineFragment : Fragment() {
@@ -29,19 +29,16 @@ class TimelineFragment : Fragment() {
         ViewModelProviders.of(this).get(PostViewModel::class.java)
     }
 
-    private lateinit var adapter: TimelinePageAdapter
+    private var adapter: TimelinePageAdapter? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_timeline, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         buildActionBar()
         buildTimeline()
     }
@@ -55,15 +52,13 @@ class TimelineFragment : Fragment() {
         context.let {
             if (VerifyNetworkInfo.isConnected(it!!)) {
                 hideNoConnectionState()
-                showProgress()
                 fetchTimeline()
             } else {
-                hideProgress()
-                showNoConnectionState()
-
+                fetchTimelineOffline()
                 state_without_conn_timeline.setOnClickListener {
                     verifyConnectionState()
                 }
+
             }
         }
     }
@@ -86,10 +81,31 @@ class TimelineFragment : Fragment() {
     }
 
     private fun fetchTimeline() {
+        showProgress()
         viewModel.getPosts().observe(this, Observer {
-            adapter.submitList(it)
-            hideProgress()
-            showPosts()
+            if (it.size != 0 ) {
+                adapter?.submitList(it)
+                hideProgress()
+                showPosts()
+            }
+        })
+    }
+
+    private fun fetchTimelineOffline() {
+        showProgress()
+        val liveData = viewModel.getPosts()
+        liveData.observe(this, object: Observer<PagedList<PostData>> {
+            override fun onChanged(list: PagedList<PostData>) {
+                hideProgress()
+                if (list.size != 0 ) {
+                    adapter?.submitList(list)
+                    hideNoConnectionState()
+                    showPosts()
+                } else {
+                    showNoConnectionState()
+                }
+                liveData.removeObserver(this)
+            }
         })
     }
 

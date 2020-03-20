@@ -2,7 +2,7 @@ package com.fastnews.ui.timeline
 
 
 import androidx.recyclerview.widget.DiffUtil
-import com.fastnews.service.model.PostData
+import com.fastnews.data.model.PostData
 
 class TimelineItemDiffUtilCallback : DiffUtil.ItemCallback<PostData>() {
 

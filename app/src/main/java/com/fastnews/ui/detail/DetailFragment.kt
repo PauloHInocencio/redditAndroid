@@ -15,13 +15,12 @@ import com.bumptech.glide.Glide
 import com.fastnews.R
 import com.fastnews.mechanism.TimeElapsed
 import com.fastnews.mechanism.VerifyNetworkInfo
-import com.fastnews.service.model.CommentData
-import com.fastnews.service.model.PostData
+import com.fastnews.data.model.CommentData
+import com.fastnews.data.model.PostData
 import com.fastnews.ui.web.CustomTabsWeb
 import com.fastnews.viewmodel.CommentViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_detail_post.*
-import kotlinx.android.synthetic.main.fragment_timeline.*
 import kotlinx.android.synthetic.main.include_detail_post_thumbnail.*
 import kotlinx.android.synthetic.main.include_detail_post_title.*
 import kotlinx.android.synthetic.main.include_item_timeline_ic_score.*
@@ -94,7 +93,7 @@ class DetailFragment : Fragment() {
 
     private fun fetchComments() {
             post.let {
-                commentViewModel.getComments(postId = post!!.id).observe(this, Observer<List<CommentData>> { comments ->
+                commentViewModel.getComments(postId = post?.id ?: "").observe(this, Observer<List<CommentData>> { comments ->
                     comments.let {
                         populateComments(comments)
                         hideStateProgress()
@@ -164,10 +163,10 @@ class DetailFragment : Fragment() {
 
         if(post?.preview != null) {
             post?.preview?.images?.map {
-                if (it.source.url.isNotEmpty()){
-                    thumbnailUrl = it.source.url.replace("&amp;", "&")
-                    return@map
+                it.source?.url?.let { url ->
+                    thumbnailUrl = url.replace("&amp;", "&")
                 }
+                return@map
             }
         }
 
