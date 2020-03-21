@@ -20,6 +20,7 @@ import com.fastnews.ui.detail.DetailFragment.Companion.KEY_POST
 import com.fastnews.viewmodel.PostViewModel
 import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class TimelineFragment : Fragment() {
