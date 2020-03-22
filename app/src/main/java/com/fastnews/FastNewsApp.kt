@@ -1,6 +1,7 @@
 package com.fastnews
 
 import android.app.Application
+import com.fastnews.di.databaseModule
 import com.fastnews.di.interactorModule
 import com.fastnews.di.networkModule
 import com.fastnews.di.viewModelModule
@@ -14,7 +15,7 @@ class FastNewsApp : Application() {
         startKoin{
             androidLogger()
             androidContext(this@FastNewsApp)
-            modules(listOf(networkModule, interactorModule, viewModelModule))
+            modules(listOf(networkModule, interactorModule, databaseModule, viewModelModule))
         }
 
     }

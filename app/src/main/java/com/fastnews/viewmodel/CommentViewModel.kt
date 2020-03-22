@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fastnews.mechanism.Coroutines
 import com.fastnews.data.model.CommentData
-import com.fastnews.interactors.GetPostsComments
+import com.fastnews.interactors.usecase.GetPostsCommentsUseCase
 
-class CommentViewModel(private val getComments:GetPostsComments): ViewModel() {
+class CommentViewModel(private val getComments:GetPostsCommentsUseCase): ViewModel() {
 
     private lateinit var comments: MutableLiveData<List<CommentData>>
 
