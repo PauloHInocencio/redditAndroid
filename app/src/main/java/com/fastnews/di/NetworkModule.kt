@@ -1,8 +1,7 @@
 package com.fastnews.di
 
 import com.fastnews.BuildConfig
-import com.fastnews.data.service.RedditService
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.fastnews.data.service.NewsService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
@@ -34,12 +33,12 @@ val networkModule = module {
         Retrofit.Builder()
             .baseUrl(get<String>(named("API_ENDPOINT")))
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(get())
             .build()
     }
 
     single {
-        get<Retrofit>().create(RedditService::class.java)
+        get<Retrofit>().create(NewsService::class.java)
     }
+
 }

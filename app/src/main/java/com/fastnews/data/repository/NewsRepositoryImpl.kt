@@ -2,20 +2,20 @@ package com.fastnews.data.repository
 
 import com.fastnews.data.model.CommentResponse
 import com.fastnews.data.model.PostResponse
-import com.fastnews.data.service.RedditService
+import com.fastnews.data.service.NewsService
 import com.fastnews.mechanism.safeApiCall
 
-class NewsRepositoryImpl (val api: RedditService) : NewsRepository {
+class NewsRepositoryImpl (private val service: NewsService) : NewsRepository {
 
     override suspend fun getPosts(after: String?, limit: Int): PostResponse? =
         safeApiCall(
-            call = { api.getPostList(after = after, limit = limit).await() },
+            call = { service.getPostList(after = after, limit = limit) },
             errorMessage = "Error to fetching posts"
        )
 
     override suspend fun getComments(postId: String): List<CommentResponse>? =
         safeApiCall(
-            call = { api.getCommentList(postId).await() },
+            call = { service.getCommentList(postId) },
             errorMessage = "Error to fetch comments from postId -> $postId"
     )
 }

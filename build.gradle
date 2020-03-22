@@ -33,7 +33,7 @@ ext {
     compileSdkVersion = 28
     buildToolsVersion = "28.0.3"
 
-    retrofitVersion = '2.5.0'
+    retrofitVersion = '2.6.0'
     archLifecycleVersion = '2.2.0-alpha04'
     coroutinesVersion = '1.2.0'
     pagingVersion = '1.0.1'
