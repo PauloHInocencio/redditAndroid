@@ -49,9 +49,9 @@ captures/
 .idea/navEditor.xml
 
 # Keystore files
-*.jks
-*.keystore
-app/keystore.properties
+#*.jks
+#*.keystore
+#app/keystore.properties
 
 
 
