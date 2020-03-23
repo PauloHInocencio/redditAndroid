@@ -51,7 +51,7 @@ captures/
 # Keystore files
 *.jks
 *.keystore
-
+app/keystore.properties
 
 
 

@@ -19,6 +19,11 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    // Load keystore
+    def keystorePropertiesFile = file("keystore.properties")
+    def keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
     defaultConfig {
         applicationId "com.fastnews"
 
@@ -35,10 +40,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("key/fast-news-key.jks")
-            storePassword "RPOXCi1I2hDOo4LbmQhSPgQN82216G6c"
-            keyAlias "fast-news"
-            keyPassword "RPOXCi1I2hDOo4LbmQhSPgQN82216G6c"
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
 
